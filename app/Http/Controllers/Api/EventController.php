@@ -14,7 +14,7 @@ class EventController extends Controller
    */
   public function index()
   {
-    return EventResource::collection(Event::with('user')->get()) ;
+    return EventResource::collection(Event::with('user')->paginate());
   }
 
   /**
@@ -62,7 +62,8 @@ class EventController extends Controller
     return response(status: 204);
   }
 
-  private function validate($request, $rule = 'required') {
+  private function validate($request, $rule = 'required')
+  {
     return $request->validate([
       'name' => $rule . '|string|max:255',
       'description' => 'nullable|string',
