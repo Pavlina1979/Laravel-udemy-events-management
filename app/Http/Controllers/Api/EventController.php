@@ -12,12 +12,13 @@ class EventController extends Controller
 {
 
   use CanLoadRelationships;
+
+  private array $relations = ['user', 'attendees', 'attendees.user'];
   /**
    * Display a listing of the resource.
    */
   public function index()
   {
-    $relations = ['user', 'attendees', 'attendees.user'];
     $query = $this->loadRelationship(Event::query());
 
 
@@ -35,7 +36,7 @@ class EventController extends Controller
 
     $event = Event::create([...$data, 'user_id' => 1]);
 
-    return new EventResource($event);
+    return new EventResource($this->loadRelationship($event));
   }
 
 
@@ -44,7 +45,7 @@ class EventController extends Controller
    */
   public function show(int $id)
   {
-    return new EventResource(Event::find($id)->load('user', 'attendees'));
+    return new EventResource($this->loadRelationship(Event::find($id)));
   }
 
   /**
@@ -57,7 +58,7 @@ class EventController extends Controller
 
     $event->update($data);
 
-    return new EventResource($event);
+    return new EventResource($this->loadRelationship($event));
   }
 
   /**
