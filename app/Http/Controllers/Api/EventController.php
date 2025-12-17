@@ -57,6 +57,10 @@ class EventController extends Controller
   public function update(Request $request, string $id)
   {
     $event = Event::find($id);
+    if (Gate::denies('update-event', $event)) {
+      abort(403, 'You are not authorized to update this Event');
+    }
+
     $data = $this->validate($request, 'sometimes');
 
     $event->update($data);
