@@ -7,6 +7,7 @@ use App\Http\Resources\EventResource;
 use App\Http\Traits\CanLoadRelationships;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class EventController extends Controller
 {
@@ -14,11 +15,13 @@ class EventController extends Controller
   use CanLoadRelationships;
 
   private array $relations = ['user', 'attendees', 'attendees.user'];
+
   /**
    * Display a listing of the resource.
    */
   public function index()
   {
+    // Gate::authorize('viewAny', Event::class);
     $query = $this->loadRelationship(Event::query());
 
 
@@ -34,7 +37,7 @@ class EventController extends Controller
   {
     $data = $this->validate($request);
 
-    $event = Event::create([...$data, 'user_id' => 1]);
+    $event = Event::create([...$data, 'user_id' => $request->user()->id]);
 
     return new EventResource($this->loadRelationship($event));
   }
