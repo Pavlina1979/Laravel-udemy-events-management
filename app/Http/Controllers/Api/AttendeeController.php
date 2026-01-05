@@ -16,6 +16,7 @@ class AttendeeController extends Controller
   use CanLoadRelationships;
 
   private array $relations = ['user'];
+
   /**
    * Display a listing of the resource.
    */
@@ -36,7 +37,7 @@ class AttendeeController extends Controller
   {
     $attendee = $this->loadRelationship(
       $event->attendees()->create([
-        'user_id' => 1,
+        'user_id' => $request->user()->id
       ])
     );
 
